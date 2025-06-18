@@ -107,13 +107,7 @@ body, html {
     right: 50px;
   }
 
-  .sports_bar {
-    position: absolute;
-    color: black;
-    font-size: 3rem;
-    animation: wiggle 1.2s ease-in-out infinite;
-    left: 80px;
-  }
+
   
   @keyframes wiggle {
     0% { transform: rotate(0deg); }
@@ -123,6 +117,10 @@ body, html {
     100% { transform: rotate(0deg); }
   }
   
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
   .normal-text {
     font-size: 2rem;
     font-weight: normal;
@@ -163,3 +161,16 @@ body, html {
     right: -200px;
     top: 200px;
   }
+
+  .arrow-down {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 5rem;
+    top: 200px;
+    animation: bounce 2s ease-in-out infinite;
+
+  }
+

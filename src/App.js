@@ -21,7 +21,7 @@ function App() {
     () => [
       { type: "component", content: <Landing setAllowScroll={setAllowScroll} />    },
       { type: "image", src: One },
-      { type: "component", content: <Wordle /> },
+     /* { type: "component", content: <Wordle /> },*/
       { type: "image", src: Two },
       { type: "image", src: Three },
       { type: "image", src: Four },
@@ -46,7 +46,8 @@ function App() {
         setStep((prev) => prev + 1);
       } else if (e.deltaY < 0 && step > 0) {
         setStep((prev) => prev - 1);
-      }
+      } 
+       
     
       setTimeout(() => {
         scrollLockRef.current = false;
@@ -66,6 +67,10 @@ function App() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -200, opacity: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
+          onAnimationComplete={() => {
+            console.log("animation complet")
+            if (step === step) scrollLockRef.current = false;
+          }}
           className="content-wrapper"
         >
           {steps[step].type === "image" && (

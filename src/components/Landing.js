@@ -6,6 +6,14 @@ import "./Landing.css";
 export default function Landing({ setAllowScroll }) {
   const steps = React.useMemo(
     () => [
+        {
+            type: "text",
+            message: (
+              <span className="arrow-down">
+                <span className="material-symbols-outlined arrow-down keyboard_arrow_down">keyboard_arrow_down</span>
+              </span>
+            ),
+          },
       
       {
         type: "text",
