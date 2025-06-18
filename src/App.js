@@ -20,12 +20,10 @@ function App() {
   const steps = React.useMemo(
     () => [
       { type: "component", content: <Landing setAllowScroll={setAllowScroll} />    },
-      { type: "text", message: "HAPPY BIRTHDAY SAM!!! 🎂🎉" },
       { type: "image", src: One },
       { type: "component", content: <Wordle /> },
       { type: "image", src: Two },
       { type: "image", src: Three },
-      { type: "text", message: "You make life more fun every year 💖" },
       { type: "image", src: Four },
       { type: "image", src: Five },
       { type: "image", src: Six },

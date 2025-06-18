@@ -6,6 +6,10 @@ body, html {
     background: #fefefe;
   }
   
+  .beer-pic {
+    width: 15em;
+  }
+
   .app {
     height: 100vh;
     width: 100vw;
@@ -72,4 +76,90 @@ body, html {
     position: absolute;
     top: 0;
     left: 0;
+  }
+
+  .stacked-steps {
+    position: absolute;
+    top: 40vh;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: .5em;
+  }
+
+  .message {
+    white-space: nowrap;
+    text-align: center;
+    font-size: 2rem;
+  }
+
+  .with-stars {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 2.5rem;
+  }
+  
+  .star {
+    color: black;
+    font-size: 3rem;
+    animation: wiggle 1.2s ease-in-out infinite;
+    position: absolute;
+    right: 50px;
+  }
+
+  .sports_bar {
+    position: absolute;
+    color: black;
+    font-size: 3rem;
+    animation: wiggle 1.2s ease-in-out infinite;
+    left: 80px;
+  }
+  
+  @keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-12deg); }
+    50% { transform: rotate(12deg); }
+    75% { transform: rotate(-6deg); }
+    100% { transform: rotate(0deg); }
+  }
+  
+  .normal-text {
+    font-size: 2rem;
+    font-weight: normal;
+  }
+  
+  .italic-text {
+    font-size: 2rem;
+    font-style: italic;
+  }
+  
+  .impact-text {
+    font-size: 4rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    text-transform: uppercase;
+  }
+  
+  .with-stars-left {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 2.5rem;
+    left: -30px;
+    top: -200px;
+    z-index: 10000;
+  }
+
+  .with-stars-right {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 2.5rem;
+    right: -200px;
+    top: 200px;
   }
