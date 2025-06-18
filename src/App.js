@@ -1,38 +1,87 @@
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import './App.css';
-import Sam1 from './assets/sam1.jpg';
-import Sam2 from './assets/sam2.jpg';
-import Sam3 from './assets/sam3.jpg';
-import Sam4 from './assets/sam4.jpg';
-import Sam5 from './assets/sam5.jpg';
-import Sam6 from './assets/sam6.webp';
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const images = [
-  Sam1,
-  Sam2,
-  Sam3,
-  Sam4,
-  Sam5,
-  Sam6
-  // Add more photo paths here
-];
+import "./App.css";
+
+import Wordle from "./components/Wordle";
+import One from "./assets/1.png";
+import Two from "./assets/2.png";
+import Three from "./assets/3.png";
+import Four from "./assets/4.png";
+import Five from "./assets/5.png";
+import Six from "./assets/6.png";
+import Seven from "./assets/7.png";
+import Landing from "./components/Landing";
+
 
 function App() {
-  return (
-    <div className="app">
-      <div className="carousel">
-        <Swiper spaceBetween={50} slidesPerView={1}>
-          {images.map((src, idx) => (
-            <SwiperSlide key={idx}>
-              <img src={src} alt={`Slide ${idx}`} className="slide-img" />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-    </div>
+  const [allowScroll, setAllowScroll] = useState(true);
+
+  const steps = React.useMemo(
+    () => [
+      { type: "component", content: <Landing setAllowScroll={setAllowScroll} />    },
+      { type: "text", message: "HAPPY BIRTHDAY SAM!!! 🎂🎉" },
+      { type: "image", src: One },
+      { type: "component", content: <Wordle /> },
+      { type: "image", src: Two },
+      { type: "image", src: Three },
+      { type: "text", message: "You make life more fun every year 💖" },
+      { type: "image", src: Four },
+      { type: "image", src: Five },
+      { type: "image", src: Six },
+      { type: "image", src: Seven },
+
+    ],
+    []
+  );
+
+  const [step, setStep] = useState(0);
+  const scrollLockRef = useRef(false); // 👈 persistent lock
+ 
+  useEffect(() => {
+    const handleWheel = (e) => {
+      if (allowScroll || scrollLockRef.current) return;
     
+      scrollLockRef.current = true;
+    
+      if (e.deltaY > 0 && step < steps.length - 1) {
+        setStep((prev) => prev + 1);
+      } else if (e.deltaY < 0 && step > 0) {
+        setStep((prev) => prev - 1);
+      }
+    
+      setTimeout(() => {
+        scrollLockRef.current = false;
+      }, 800);
+    };
+    
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => window.removeEventListener("wheel", handleWheel);
+  }, [steps, step, allowScroll]);
+  return (
+    <div className="screen">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={step}
+          initial={{ y: 200, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -200, opacity: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="content-wrapper"
+        >
+          {steps[step].type === "image" && (
+            <img src={steps[step].src} alt={`step ${step}`} className="photo" />
+          )}
+          {steps[step].type === "text" && (
+            <h1 className="message">{steps[step].message}</h1>
+          )}
+          {steps[step].type === "component" && (
+            <div className="component-wrapper">{steps[step].content}</div>
+          )}
+        </motion.div>
+      </AnimatePresence>
+    </div>
   );
 }
 
