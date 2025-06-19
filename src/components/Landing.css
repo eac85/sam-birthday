@@ -169,7 +169,7 @@ body, html {
     align-items: center;
     gap: 8px;
     font-size: 5rem;
-    top: 200px;
+    top: 150px;
     animation: bounce 2s ease-in-out infinite;
 
   }

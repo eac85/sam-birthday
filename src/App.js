@@ -4,13 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import "./App.css";
 
 import Wordle from "./components/Wordle";
-import One from "./assets/1.png";
-import Two from "./assets/2.png";
-import Three from "./assets/3.png";
-import Four from "./assets/4.png";
-import Five from "./assets/5.png";
-import Six from "./assets/6.png";
-import Seven from "./assets/7.png";
+
 import Landing from "./components/Landing";
 
 function App() {
@@ -19,17 +13,16 @@ function App() {
   const scrollLockRef = useRef(false);
   const touchStartY = useRef(null);
 
+  const imageSteps = Array.from({ length: 15 }, (_, i) => ({
+    type: "image",
+    src: require(`./assets/${i + 1}.png`)
+  }));
+  
+  console.log(imageSteps)
   const steps = React.useMemo(
     () => [
       { type: "component", content: <Landing setAllowScroll={setAllowScroll} /> },
-      { type: "image", src: One },
-      // { type: "component", content: <Wordle /> },
-      { type: "image", src: Two },
-      { type: "image", src: Three },
-      { type: "image", src: Four },
-      { type: "image", src: Five },
-      { type: "image", src: Six },
-      { type: "image", src: Seven },
+      ...imageSteps
     ],
     []
   );
@@ -92,7 +85,7 @@ function App() {
           initial={{ y: 200, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -200, opacity: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          transition={{ duration: .75, ease: "easeOut" }}
           onAnimationComplete={() => {
             scrollLockRef.current = false;
           }}
