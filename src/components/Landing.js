@@ -6,15 +6,14 @@ import "./Landing.css";
 export default function Landing({ setAllowScroll }) {
   const steps = React.useMemo(
     () => [
-        {
-            type: "text",
-            message: (
-              <span className="arrow-down">
-                <span className="material-symbols-outlined arrow-down keyboard_arrow_down">keyboard_arrow_down</span>
-              </span>
-            ),
-          },
-      
+      {
+        type: "text",
+        message: (
+          <span className="arrow-down">
+            <span className="material-symbols-outlined arrow-down keyboard_arrow_down">keyboard_arrow_down</span>
+          </span>
+        ),
+      },
       {
         type: "text",
         message: (
@@ -26,8 +25,8 @@ export default function Landing({ setAllowScroll }) {
       {
         type: "text",
         message: (
-          <span >
-            <img className="beer-pic" src={HBD} alt="Happy Birthday"></img>
+          <span>
+            <img className="beer-pic" src={HBD} alt="Happy Birthday" />
           </span>
         ),
       },
@@ -45,32 +44,56 @@ export default function Landing({ setAllowScroll }) {
 
   const [step, setStep] = useState(0);
   const scrollLockRef = useRef(false);
+  const touchStartY = useRef(null);
+
+  const handleScrollStep = (direction) => {
+    if (scrollLockRef.current) return;
+    scrollLockRef.current = true;
+
+    if (step === steps.length - 1) {
+      setAllowScroll(false);
+    } else {
+      setAllowScroll(true);
+    }
+
+    if (direction === "down" && step < steps.length - 1) {
+      setStep((prev) => prev + 1);
+    } else if (direction === "up" && step > 0) {
+      setStep((prev) => prev - 1);
+    } else {
+      scrollLockRef.current = false;
+    }
+  };
 
   useEffect(() => {
     const handleWheel = (e) => {
-      if (scrollLockRef.current) return;
-      scrollLockRef.current = true;
+      const direction = e.deltaY > 0 ? "down" : "up";
+      handleScrollStep(direction);
+    };
 
-      const isScrollingDown = e.deltaY > 0;
-      const isScrollingUp = e.deltaY < 0;
+    const handleTouchStart = (e) => {
+      touchStartY.current = e.touches[0].clientY;
+    };
 
-      if (step === steps.length - 1) {
-        console.log("we got here")
-        setAllowScroll(false);
-      } else {
-        setAllowScroll(true);
-      }
-      if (isScrollingDown && step < steps.length - 1) {
-        setStep((prev) => prev + 1);
-      } else if (isScrollingUp && step > 0) {
-        setStep((prev) => prev - 1);
-      } else {
-        scrollLockRef.current = false; // Unlock if no step change
-      }
+    const handleTouchEnd = (e) => {
+      if (touchStartY.current === null) return;
+      const deltaY = touchStartY.current - e.changedTouches[0].clientY;
+      if (Math.abs(deltaY) < 30) return;
+
+      const direction = deltaY > 0 ? "down" : "up";
+      handleScrollStep(direction);
+      touchStartY.current = null;
     };
 
     window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => window.removeEventListener("wheel", handleWheel);
+    window.addEventListener("touchstart", handleTouchStart, { passive: false });
+    window.addEventListener("touchend", handleTouchEnd, { passive: false });
+
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
   }, [step, steps.length]);
 
   return (
@@ -86,14 +109,14 @@ export default function Landing({ setAllowScroll }) {
           }}
           className="content-wrapper"
           style={{
-            marginTop: `${i * 40}px`, // staggered vertical positioning
+            marginTop: `${i * 40}px`,
           }}
         >
           {entry.type === "text" && (
             <h1 className="message">{entry.message}</h1>
           )}
-           {entry.type === "image" && (
-            <img src={steps[step].src} alt={`step ${step}`} className="photo" />
+          {entry.type === "image" && (
+            <img src={entry.src} alt={`step ${i}`} className="photo" />
           )}
         </motion.div>
       ))}
