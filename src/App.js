@@ -91,7 +91,7 @@ function App() {
             y: direction === "down" ? -200 : 200, 
             opacity: 0 
           }}
-          transition={{ duration: 0.75, ease: "easeOut" }}
+          transition={{ duration: 0.75, ease: "easeInOut" }}
           onAnimationComplete={() => {
             scrollLockRef.current = false;
           }}
