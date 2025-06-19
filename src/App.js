@@ -10,15 +10,15 @@ import Landing from "./components/Landing";
 function App() {
   const [allowScroll, setAllowScroll] = useState(true);
   const [step, setStep] = useState(0);
+  const [direction, setDirection] = useState("down"); // 👈 NEW
   const scrollLockRef = useRef(false);
   const touchStartY = useRef(null);
 
-  const imageSteps = Array.from({ length: 15 }, (_, i) => ({
+  const imageSteps = Array.from({ length: 14 }, (_, i) => ({
     type: "image",
     src: require(`./assets/${i + 1}.png`)
   }));
-  
-  console.log(imageSteps)
+
   const steps = React.useMemo(
     () => [
       { type: "component", content: <Landing setAllowScroll={setAllowScroll} /> },
@@ -27,14 +27,14 @@ function App() {
     []
   );
 
-  const scrollByDirection = (direction) => {
+  const scrollByDirection = (dir) => {
     if (allowScroll || scrollLockRef.current) return;
-
     scrollLockRef.current = true;
+    setDirection(dir); // 👈 SET direction before transition
 
-    if (direction === "down" && step < steps.length - 1) {
+    if (dir === "down" && step < steps.length - 1) {
       setStep((prev) => prev + 1);
-    } else if (direction === "up" && step > 0) {
+    } else if (dir === "up" && step > 0) {
       setStep((prev) => prev - 1);
     } else {
       scrollLockRef.current = false;
@@ -47,8 +47,8 @@ function App() {
 
   useEffect(() => {
     const handleWheel = (e) => {
-      const direction = e.deltaY > 0 ? "down" : "up";
-      scrollByDirection(direction);
+      const dir = e.deltaY > 0 ? "down" : "up";
+      scrollByDirection(dir);
     };
 
     const handleTouchStart = (e) => {
@@ -59,10 +59,10 @@ function App() {
       if (touchStartY.current === null) return;
 
       const deltaY = touchStartY.current - e.changedTouches[0].clientY;
-      if (Math.abs(deltaY) < 30) return; // prevent tiny swipes
+      if (Math.abs(deltaY) < 30) return;
 
-      const direction = deltaY > 0 ? "down" : "up";
-      scrollByDirection(direction);
+      const dir = deltaY > 0 ? "down" : "up";
+      scrollByDirection(dir);
       touchStartY.current = null;
     };
 
@@ -82,10 +82,16 @@ function App() {
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
-          initial={{ y: 200, opacity: 0 }}
+          initial={{ 
+            y: direction === "down" ? 200 : -200, 
+            opacity: 0 
+          }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -200, opacity: 0 }}
-          transition={{ duration: .75, ease: "easeOut" }}
+          exit={{ 
+            y: direction === "down" ? -200 : 200, 
+            opacity: 0 
+          }}
+          transition={{ duration: 0.75, ease: "easeOut" }}
           onAnimationComplete={() => {
             scrollLockRef.current = false;
           }}
@@ -105,5 +111,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
